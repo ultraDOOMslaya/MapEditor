@@ -1,0 +1,24 @@
+#pragma once
+
+#include "Ogre.h"
+
+#include "SquareCell.h"
+
+class SquareGrid
+{
+public:
+	SquareGrid(Ogre::SceneManager* mScnMgr, Ogre::MaterialPtr defaultColor);
+	~SquareGrid();
+
+	void createCell(int x, int z, int i);
+	SquareCell* getCell(Ogre::String);
+
+	Ogre::SceneManager* mScnMgr;
+	Ogre::MaterialPtr					mDefaultColor;
+
+	const static int width = 6;
+	const static int height = 6;
+
+	SquareCell cells[width * height];
+};
+
