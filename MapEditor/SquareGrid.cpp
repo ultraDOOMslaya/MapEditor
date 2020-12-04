@@ -26,18 +26,23 @@ void SquareGrid::createCell(int x, int z, int i) {
 	//cell->touchCell(mDefaultColor);
 	cells[i] = *cell;
 
-	if (x > 0) {
-		cell->setNeighbor(SquareDirection::W, cells[i - 1]);
-	}
-	//if (x < width) {
-	//	cell->setNeighbor(SquareDirection::E, cells[i + i]);
+	//if (x > 0) {
+	//	SquareCell* westNeighbor = &cells[i - 1];
+	//	//cell->setNeighbor(SquareDirection::W, westNeighbor);
+
+	//	cell->neighbors[SquareDirection::W] = westNeighbor;
+	//	westNeighbor->neighbors[SquareDirection::E] = cell;
 	//}
-	if (z > 0) {
-		if ((z & 1) == 0) {
-			cell->setNeighbor(SquareDirection::S, cells[i - width]);
-		}
-	}
+
+	//if (z > 0) {
+	//	SquareCell* northNeighbor = &cells[i - width];
+	//	//cell->setNeighbor(SquareDirection::N, northNeighbor);
+
+	//	cell->neighbors[SquareDirection::N] = northNeighbor;
+	//	northNeighbor->neighbors[SquareDirection::S] = cell;
+	//}
 }
+
 
 
 SquareCell* SquareGrid::getCell(Ogre::String objName) {

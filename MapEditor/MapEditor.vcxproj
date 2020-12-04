@@ -115,14 +115,14 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(BOX2D_HOME)\include;C:\Projects\Dependencies\RakNet\Source;$(OGRE_HOME)\include\OGRE\RTShaderSystem;$(OGRE_HOME)\include\OGRE\Bites;$(SDL2_HOME)\include;$(OGRE_HOME)\include\OGRE\Overlay;$(OGRE_HOME)\include\OGRE;$(OGRE_HOME)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Projects\Dependencies\RakNet\Source;$(OGRE_HOME)\include\OGRE\RTShaderSystem;$(OGRE_HOME)\include\OGRE\Bites;$(SDL2_HOME)\include;$(OGRE_HOME)\include\OGRE\Overlay;$(OGRE_HOME)\include\OGRE;$(OGRE_HOME)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(SDL2_HOME)\lib\x64;C:\Projects\FlowField\SeaWolves\Box2D\lib;$(OGRE_HOME)\lib;$(OGRE_HOME)\lib\OGRE;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>ws2_32.lib;OgreBites.lib;OgreMain.lib;OgreOverlay.lib;OgreRTShaderSystem.lib;Box2d.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SDL2_HOME)\lib\x64;$(OGRE_HOME)\lib;$(OGRE_HOME)\lib\OGRE;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>ws2_32.lib;OgreBites.lib;OgreMain.lib;OgreOverlay.lib;OgreRTShaderSystem.lib;SDL2.lib;SDL2main.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>copy "$(OutDir)$(TargetFileName)" "$(OGRE_HOME)\bin"</Command>

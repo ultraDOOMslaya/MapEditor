@@ -52,10 +52,46 @@ SquareMesh::~SquareMesh()
 void SquareMesh::changeColor(Ogre::String materialName)
 {
 	mPlaneEntity->setMaterialName(materialName);
+	mNorthEdge->setMaterialName(materialName);
+	mSouthEdge->setMaterialName(materialName);
+	mEastEdge->setMaterialName(materialName);
+	mWestEdge->setMaterialName(materialName);
+}
+
+
+void SquareMesh::changeEdgeColor(SquareDirection direction, Ogre::ColourValue newColor, Ogre::ColourValue neighborColor)
+{
+	float r = (newColor.r + neighborColor.r) * 0.5f;
+	float g = (newColor.g + neighborColor.g) * 0.5f;
+	float b = (newColor.b + neighborColor.b) * 0.5f;
+	Ogre::ColourValue blendedColor = Ogre::ColourValue(r, g, b, 1.0f);
+
+	if (direction == SquareDirection::N) {
+		mNorthMat->getTechnique(0)->getPass(0)->createTextureUnitState()->setColourOperationEx(Ogre::LBX_SOURCE1, Ogre::LBS_MANUAL, Ogre::LBS_CURRENT, blendedColor);
+		mNorthEdge->setMaterial(mNorthMat);
+	}
+	else if (direction == SquareDirection::S) {
+		mSouthMat->getTechnique(0)->getPass(0)->createTextureUnitState()->setColourOperationEx(Ogre::LBX_SOURCE1, Ogre::LBS_MANUAL, Ogre::LBS_CURRENT, blendedColor);
+		mSouthEdge->setMaterial(mSouthMat);
+	}
+	else if (direction == SquareDirection::E) {
+		mEastMat->getTechnique(0)->getPass(0)->createTextureUnitState()->setColourOperationEx(Ogre::LBX_SOURCE1, Ogre::LBS_MANUAL, Ogre::LBS_CURRENT, blendedColor);
+		mEastEdge->setMaterial(mEastMat);
+	}
+	else if (direction == SquareDirection::W) {
+		mWestMat->getTechnique(0)->getPass(0)->createTextureUnitState()->setColourOperationEx(Ogre::LBX_SOURCE1, Ogre::LBS_MANUAL, Ogre::LBS_CURRENT, blendedColor);
+		mWestEdge->setMaterial(mWestMat);
+	}
+
+	//mEastEdge->setMaterial(blendedMat);
+	//mNorthEdge->setMaterial(blendedMat);
+	//mSouthEdge->setMaterial(blendedMat);
+	//mWestEdge->setMaterial(blendedMat);
+	/*mPlaneEntity->setMaterialName(materialName);
 	mEastEdge->setMaterialName(materialName);
 	mNorthEdge->setMaterialName(materialName);
 	mWestEdge->setMaterialName(materialName);
-	mSouthEdge->setMaterialName(materialName);
+	mSouthEdge->setMaterialName(materialName);*/
 }
 
 
@@ -76,7 +112,7 @@ void SquareMesh::addEdges(int cm, int cp, Ogre::String parentMeshName, Ogre::Sce
 	vertices[6] = cm + Offsets::innerOffset;
 	vertices[7] = cp + Offsets::innerOffset;
 
-	addQuad(vertices, parentMeshName, "E", sceneManager);
+	addQuad(vertices, parentMeshName, "W", sceneManager);
 
 	/* North Quad */
 	vertices[0] = cm + Offsets::innerOffset;
@@ -106,7 +142,7 @@ void SquareMesh::addEdges(int cm, int cp, Ogre::String parentMeshName, Ogre::Sce
 	vertices[6] = cm + Offsets::offset;
 	vertices[7] = cp + Offsets::offset;
 
-	addQuad(vertices, parentMeshName, "W", sceneManager);
+	addQuad(vertices, parentMeshName, "E", sceneManager);
 
 	/* South Quad */
 	vertices[0] = cm;
@@ -159,15 +195,23 @@ void SquareMesh::addQuad(int vertices[8], Ogre::String parentMeshName, Ogre::Str
 
 	if (direction == "W") {
 		mWestEdge = anEntity;
+		mWestMat = Ogre::MaterialManager::getSingleton().create(
+			parentMeshName.append("_W"), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 	}
 	else if (direction == "N") {
 		mNorthEdge = anEntity;
+		mNorthMat = Ogre::MaterialManager::getSingleton().create(
+			parentMeshName.append("_N"), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 	}
 	else if (direction == "S") {
 		mSouthEdge = anEntity;
+		mSouthMat = Ogre::MaterialManager::getSingleton().create(
+			parentMeshName.append("_S"), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 	}
 	else if (direction == "E") {
 		mEastEdge = anEntity;
+		mEastMat = Ogre::MaterialManager::getSingleton().create(
+			parentMeshName.append("_E"), Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 	}
 }
 

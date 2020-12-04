@@ -12,7 +12,7 @@
 #include <OgreOverlayElementFactory.h>
 
 #include <OgreTrays.h>
-#include "SDL.h"
+#include "SDL2-2.0.8/include/SDL.h"
 
 #include "SquareGrid.h"
 #include "SquareCell.h"
@@ -40,7 +40,11 @@ public:
 	OgreBites::Slider* mElevationSlider;
 
 	Ogre::MaterialPtr greenMat;
+	Ogre::ColourValue greenColor = Ogre::ColourValue::Green;
 	Ogre::MaterialPtr yellowMat;
+	Ogre::ColourValue yellowColor = Ogre::ColourValue::ColourValue(1.0f, 0.8f, 0.0f, 1.0f);
+	Ogre::MaterialPtr blueMat;
+	Ogre::ColourValue blueColor = Ogre::ColourValue::Blue;
 
 	Ogre::SceneManager* mScnMgr;
 	Ogre::Camera* mCam;

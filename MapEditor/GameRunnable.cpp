@@ -29,15 +29,27 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent& evt)
 				Ogre::String parsedObjName = Ogre::StringUtil::split(objName, "_").at(0);
 				SquareCell* cell = nullptr;
 				cell = mSquareGrid->getCell(parsedObjName);
-				
+
 				if (mEditColorSM->getSelectedItem() == "Green") {
-					cell->touchCell(greenMat);
+					cell->touchCell(greenMat, greenColor, mElevationSlider->getValue());
 				}
 				else if (mEditColorSM->getSelectedItem() == "Yellow") {
-					cell->touchCell(yellowMat);
+					cell->touchCell(yellowMat, yellowColor, mElevationSlider->getValue());
+				}
+				else if (mEditColorSM->getSelectedItem() == "Blue") {
+					cell->touchCell(blueMat, blueColor, mElevationSlider->getValue());
 				}
 			}
 		}
+	}
+}
+
+SquareDirection getOppositeDirection(SquareDirection direction) {
+	if (direction == SquareDirection::W) {
+		return SquareDirection::E;
+	}
+	else {
+		return SquareDirection::S;
 	}
 }
 
@@ -67,9 +79,9 @@ void GameRunnable::setup(void)
 	mMoveableCamera = mTrayMgr->createCheckBox(OgreBites::TL_TOPRIGHT, "MoveableCamera", "Moveable Camera", 150.0f);
 
 
-	mEditColorSM = mTrayMgr->createThickSelectMenu(OgreBites::TL_TOPLEFT, "EditColor", "Colors:", 180.0f, 2, { "Green", "Yellow" });
-	/*mGroundTypeSM = mTrayMgr->createThickSelectMenu(OgreBites::TL_TOPLEFT, "GroundType", "Textures:", 180.0f, 2, { "Grass", "Dirt" });
-	mElevationSlider = mTrayMgr->createThickSlider(OgreBites::TL_TOPLEFT, "Elevation", "#:", 180.0f, 150.0f, 0, 6, 7);*/
+	mEditColorSM = mTrayMgr->createThickSelectMenu(OgreBites::TL_TOPLEFT, "EditColor", "Colors:", 180.0f, 3, { "Green", "Yellow", "Blue" });
+	/*mGroundTypeSM = mTrayMgr->createThickSelectMenu(OgreBites::TL_TOPLEFT, "GroundType", "Textures:", 180.0f, 2, { "Grass", "Dirt" });*/
+	mElevationSlider = mTrayMgr->createThickSlider(OgreBites::TL_TOPLEFT, "Elevation", "#:", 180.0f, 150.0f, 0, 6, 7);
 
 	addInputListener(mTrayMgr);
 
@@ -117,10 +129,41 @@ void GameRunnable::setup(void)
 
 	yellowMat->getTechnique(0)->getPass(0)->createTextureUnitState()->setColourOperationEx(Ogre::LBX_SOURCE1, Ogre::LBS_MANUAL, Ogre::LBS_CURRENT, Ogre::ColourValue::ColourValue(1.0f, 0.8f, 0.0f, 1.0f));
 
+	blueMat =
+		Ogre::MaterialManager::getSingleton().create(
+			"BlueMat", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+	blueMat->getTechnique(0)->getPass(0)->createTextureUnitState()->setColourOperationEx(Ogre::LBX_SOURCE1, Ogre::LBS_MANUAL, Ogre::LBS_CURRENT, Ogre::ColourValue::Blue);
+
 
 	mSquareGrid = new SquareGrid(mScnMgr, greenMat);
 
+	for (int z = 0, i = 0; z < mSquareGrid->height; z++) {
+		for (int x = 0; x < mSquareGrid->width; x++) {
+			
+			SquareCell* cell = &mSquareGrid->cells[i];
 
+			if (x > 0) {
+				SquareCell* westNeighbor = &mSquareGrid->cells[i - 1];
+				//cell->setNeighbor(SquareDirection::W, westNeighbor);
+
+				cell->neighbors[SquareDirection::W] = westNeighbor;
+				//int oppositeDirection = SquareDirection::E;
+				westNeighbor->neighbors[SquareDirection::E] = cell;
+			}
+
+			if (z > 0) {
+				SquareCell* northNeighbor = &mSquareGrid->cells[i - mSquareGrid->width];
+				//cell->setNeighbor(SquareDirection::N, northNeighbor);
+
+				cell->neighbors[SquareDirection::N] = northNeighbor;
+				int oppositeDirection = getOppositeDirection(SquareDirection::N);
+				northNeighbor->neighbors[oppositeDirection] = cell;
+			}
+
+			i++;
+		}
+	}
 }
 //----------------------------------------------------------------
 

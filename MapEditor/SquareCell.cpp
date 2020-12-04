@@ -6,6 +6,7 @@
 SquareCell::SquareCell(int x, int z, int i, Ogre::SceneManager* sceneManager)
 {
 	tileId = i;
+	mColor = Ogre::ColourValue::White;
 	mMesh = new SquareMesh(x, z, tileId, sceneManager);
 }
 
@@ -19,15 +20,43 @@ SquareCell::~SquareCell()
 }
 
 
-int getOpposite(SquareDirection direction) {
-	int oppositeDirection = 0;
-	if ((int)direction > 3) {
-		oppositeDirection - 4;
+SquareDirection getOpposite(SquareDirection direction) {
+	if (direction == SquareDirection::W) {
+		return SquareDirection::E;
 	}
 	else {
-		oppositeDirection + 4;
+		return SquareDirection::S;
 	}
-	return oppositeDirection;
+}
+
+
+void SquareCell::touchCell(Ogre::MaterialPtr mat, Ogre::ColourValue color, int activeElevation) {
+
+	mMesh->changeColor(mat->getName());
+	mColor = color;
+	if (neighbors[SquareDirection::N] != NULL) {
+		mMesh->changeEdgeColor(SquareDirection::N, color, neighbors[SquareDirection::N]->mColor);
+		neighbors[SquareDirection::N]->mMesh->changeEdgeColor(SquareDirection::S, color, neighbors[SquareDirection::N]->mColor);
+	}
+		
+	if (neighbors[SquareDirection::S] != NULL) {
+		mMesh->changeEdgeColor(SquareDirection::S, color, neighbors[SquareDirection::S]->mColor);
+		neighbors[SquareDirection::S]->mMesh->changeEdgeColor(SquareDirection::N, color, neighbors[SquareDirection::S]->mColor);
+
+	}
+		
+	if (neighbors[SquareDirection::E] != NULL) {
+		mMesh->changeEdgeColor(SquareDirection::E, color, neighbors[SquareDirection::E]->mColor);
+		neighbors[SquareDirection::E]->mMesh->changeEdgeColor(SquareDirection::W, color, neighbors[SquareDirection::E]->mColor);
+	}
+
+	if (neighbors[SquareDirection::W] != NULL) {
+		mMesh->changeEdgeColor(SquareDirection::W, color, neighbors[SquareDirection::W]->mColor);
+		neighbors[SquareDirection::W]->mMesh->changeEdgeColor(SquareDirection::E, color, neighbors[SquareDirection::W]->mColor);
+	}
+
+	mMesh->mPlaneEntity->getParentSceneNode()->translate(0, (activeElevation * elevationStep), 0);
+	
 }
 
 
@@ -37,14 +66,20 @@ void SquareCell::touchCell(Ogre::MaterialPtr color)
 }
 
 
-SquareCell SquareCell::getNeighbor(SquareDirection direction) {
-	return *neighbors[(int)direction];
+SquareCell* SquareCell::getNeighbor(SquareDirection direction) {
+	return neighbors[direction];
 }
 
 
-void SquareCell::setNeighbor(SquareDirection direction, SquareCell cell) {
-	neighbors[(int)direction] = &cell;
-	cell.neighbors[getOpposite(direction)] = this;
+void SquareCell::setNeighbor(SquareDirection direction, SquareCell* cell) {
+	neighbors[direction] = cell;
+	//int oppositeDirection = getOpposite(direction);
+	if (direction == SquareDirection::W) 
+		cell->neighbors[SquareDirection::E] = this;
+
+	if (direction == SquareDirection::N)
+		cell->neighbors[SquareDirection::S] = this;
+
 }
 
 
