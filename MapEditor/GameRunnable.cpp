@@ -31,10 +31,20 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent& evt)
 				cell = mSquareGrid->getCell(parsedObjName);
 
 				if (mEditColorSM->getSelectedItem() == "Green") {
-					cell->touchCell(greenMat, greenColor, mElevationSlider->getValue());
+					if (mElevationSlider->getValue() == 0) {
+						cell->touchCell(darkerGreenMat, darkerGreenColor, mElevationSlider->getValue());
+					}
+					else {
+						cell->touchCell(greenMat, greenColor, mElevationSlider->getValue());
+					}
 				}
 				else if (mEditColorSM->getSelectedItem() == "Yellow") {
-					cell->touchCell(yellowMat, yellowColor, mElevationSlider->getValue());
+					if (mElevationSlider->getValue() == 0) {
+						cell->touchCell(darkerYellowMat, darkerYellowColor, mElevationSlider->getValue());
+					}
+					else {
+						cell->touchCell(yellowMat, yellowColor, mElevationSlider->getValue());
+					}
 				}
 				else if (mEditColorSM->getSelectedItem() == "Blue") {
 					cell->touchCell(blueMat, blueColor, mElevationSlider->getValue());
@@ -81,7 +91,8 @@ void GameRunnable::setup(void)
 
 	mEditColorSM = mTrayMgr->createThickSelectMenu(OgreBites::TL_TOPLEFT, "EditColor", "Colors:", 180.0f, 3, { "Green", "Yellow", "Blue" });
 	/*mGroundTypeSM = mTrayMgr->createThickSelectMenu(OgreBites::TL_TOPLEFT, "GroundType", "Textures:", 180.0f, 2, { "Grass", "Dirt" });*/
-	mElevationSlider = mTrayMgr->createThickSlider(OgreBites::TL_TOPLEFT, "Elevation", "#:", 180.0f, 150.0f, 0, 6, 7);
+	mElevationSlider = mTrayMgr->createThickSlider(OgreBites::TL_TOPLEFT, "Elevation", "#:", 180.0f, 150.0f, -1, 5, 7);
+	mElevationSlider->setValue(0);
 
 	addInputListener(mTrayMgr);
 
@@ -135,6 +146,29 @@ void GameRunnable::setup(void)
 
 	blueMat->getTechnique(0)->getPass(0)->createTextureUnitState()->setColourOperationEx(Ogre::LBX_SOURCE1, Ogre::LBS_MANUAL, Ogre::LBS_CURRENT, Ogre::ColourValue::Blue);
 
+	grayMat =
+		Ogre::MaterialManager::getSingleton().create(
+			"GrayMat", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+	grayMat->getTechnique(0)->getPass(0)->createTextureUnitState()->setColourOperationEx(Ogre::LBX_SOURCE1, Ogre::LBS_MANUAL, Ogre::LBS_CURRENT, Ogre::ColourValue::ColourValue(0.75f, 0.78f, 0.74f));
+
+	darkerGrayMat =
+		Ogre::MaterialManager::getSingleton().create(
+			"DarkerGrayMat", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+	darkerGreenMat =
+		Ogre::MaterialManager::getSingleton().create(
+			"DarkerGreenMat", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+	darkerGreenMat->getTechnique(0)->getPass(0)->createTextureUnitState()->setColourOperationEx(Ogre::LBX_SOURCE1, Ogre::LBS_MANUAL, Ogre::LBS_CURRENT, darkerGreenColor);
+
+	darkerGrayMat->getTechnique(0)->getPass(0)->createTextureUnitState()->setColourOperationEx(Ogre::LBX_SOURCE1, Ogre::LBS_MANUAL, Ogre::LBS_CURRENT, Ogre::ColourValue::ColourValue(0.67f, 0.70f, 0.66f));
+
+	darkerYellowMat =
+		Ogre::MaterialManager::getSingleton().create(
+			"DarkerYellowMat", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+	darkerYellowMat->getTechnique(0)->getPass(0)->createTextureUnitState()->setColourOperationEx(Ogre::LBX_SOURCE1, Ogre::LBS_MANUAL, Ogre::LBS_CURRENT, darkerYellowColor);
 
 	mSquareGrid = new SquareGrid(mScnMgr, greenMat);
 
@@ -161,9 +195,26 @@ void GameRunnable::setup(void)
 				northNeighbor->neighbors[oppositeDirection] = cell;
 			}
 
+			//if (x > 0 && z > 0) {
+			//	SquareCell* northWestNeighbor = &mSquareGrid->cells[i - mSquareGrid->width - 1];
+
+			//	cell->neighbors[SquareDirection::NW] = northWestNeighbor;
+			//	northWestNeighbor->neighbors[SquareDirection::SE] = cell;
+
+			//	SquareCell* northEastNeighbor = &mSquareGrid->cells[i - mSquareGrid->width + 1];
+
+			//	cell->neighbors[SquareDirection::NE] = northEastNeighbor;
+			//	northEastNeighbor->neighbors[SquareDirection::SW] = cell;
+			//}
+
 			i++;
 		}
 	}
+
+	//Ogre::Image::Filter::FILTER_BILINEAR;
+	//Ogre::Image noiseSource;
+	//noiseSource.load("PerlinNoise.PNG", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+	//noiseSource.getColourAt(0, 0, 0);
 }
 //----------------------------------------------------------------
 

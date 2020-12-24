@@ -6,6 +6,7 @@ SquareGrid::SquareGrid(Ogre::SceneManager* SceneManager, Ogre::MaterialPtr defau
 {
 	mScnMgr = SceneManager;
 	mDefaultColor = defaultColor;
+	mSquareMetrics = new SquareMetrics();
 
 	for (int z = 0, i = 0; z < height; z++) {
 		for (int x = 0; x < width; x++) {
@@ -22,7 +23,7 @@ SquareGrid::~SquareGrid()
 
 void SquareGrid::createCell(int x, int z, int i) {
 
-	SquareCell* cell = new SquareCell(x, z, i, mScnMgr);
+	SquareCell* cell = new SquareCell(x, z, i, mScnMgr, mSquareMetrics);
 	//cell->touchCell(mDefaultColor);
 	cells[i] = *cell;
 

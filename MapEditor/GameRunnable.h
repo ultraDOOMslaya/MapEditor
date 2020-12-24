@@ -45,6 +45,17 @@ public:
 	Ogre::ColourValue yellowColor = Ogre::ColourValue::ColourValue(1.0f, 0.8f, 0.0f, 1.0f);
 	Ogre::MaterialPtr blueMat;
 	Ogre::ColourValue blueColor = Ogre::ColourValue::Blue;
+	Ogre::MaterialPtr grayMat;
+	Ogre::ColourValue grayColor = Ogre::ColourValue::ColourValue(0.75f, 0.78f, 0.74f);
+	
+	/* elevations */
+	Ogre::MaterialPtr darkerGreenMat;
+	Ogre::ColourValue darkerGreenColor = Ogre::ColourValue::ColourValue(0.0f, 0.92f, 0.0f, 1.0f);
+	Ogre::MaterialPtr darkerYellowMat;
+	Ogre::ColourValue darkerYellowColor = Ogre::ColourValue::ColourValue(0.92f, 0.72f, 0.0f, 1.0f);
+	Ogre::MaterialPtr darkerGrayMat;
+	Ogre::ColourValue darkerGrayColor = Ogre::ColourValue::ColourValue(0.68f, 0.68f, 0.68f);
+
 
 	Ogre::SceneManager* mScnMgr;
 	Ogre::Camera* mCam;

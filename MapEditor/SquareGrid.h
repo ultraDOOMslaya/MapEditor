@@ -3,6 +3,7 @@
 #include "Ogre.h"
 
 #include "SquareCell.h"
+#include "SquareMetrics.h"
 
 class SquareGrid
 {
@@ -15,6 +16,7 @@ public:
 
 	Ogre::SceneManager* mScnMgr;
 	Ogre::MaterialPtr					mDefaultColor;
+	SquareMetrics*						mSquareMetrics;
 
 	const static int width = 6;
 	const static int height = 6;

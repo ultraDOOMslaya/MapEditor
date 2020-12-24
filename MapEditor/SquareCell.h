@@ -3,11 +3,12 @@
 #include "Ogre.h"
 
 #include "SquareMesh.h"
+#include "SquareMetrics.h"
 
 class SquareCell
 {
 public:
-	SquareCell(int x, int z, int i, Ogre::SceneManager* sceneManager);
+	SquareCell(int x, int z, int i, Ogre::SceneManager* sceneManager, SquareMetrics* squareMetrics);
 	SquareCell();
 	~SquareCell();
 
@@ -18,8 +19,8 @@ public:
 
 	int							tileId;
 	int							mElevation;
-	float						elevationStep = 5.0f;
-	SquareCell*					neighbors[4];
+	float						elevationStep = 25.0f;
+	SquareCell*					neighbors[8];
 	SquareMesh*					mMesh;
 
 	Ogre::ColourValue			mColor;
