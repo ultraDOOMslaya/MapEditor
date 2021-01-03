@@ -130,6 +130,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="GameRunnable.h" />
+    <ClInclude Include="Offsets.h" />
     <ClInclude Include="SquareCell.h" />
     <ClInclude Include="SquareGrid.h" />
     <ClInclude Include="SquareMesh.h" />
@@ -137,6 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameRunnable.cpp" />
+    <ClCompile Include="Offsets.cpp" />
     <ClCompile Include="SquareCell.cpp" />
     <ClCompile Include="SquareGrid.cpp" />
     <ClCompile Include="SquareMesh.cpp" />

@@ -1,7 +1,6 @@
 #include "SquareMetrics.h"
 
 
-
 SquareMetrics::SquareMetrics()
 {
 	noiseSource.load("PerlinNoise.png", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
@@ -33,7 +32,9 @@ Ogre::Vector3 SquareMetrics::SampleNoise(Ogre::Vector3 position)
 
 Ogre::Vector3 SquareMetrics::Perturb(int x, int y, int z)
 {
-	Ogre::ColourValue val = noiseSource.getColourAt(x, z, 0);
+	int noise_x = x > 512 ? x % 512 : x;
+	int noise_y = z > 512 ? z % 512 : z;
+	Ogre::ColourValue val = noiseSource.getColourAt(noise_x, noise_y, 0);
 	Ogre::Vector3 sample = Ogre::Vector3(val.r, val.g, val.b);
 
 	//Ogre::Vector3 sample = SampleNoise(position);

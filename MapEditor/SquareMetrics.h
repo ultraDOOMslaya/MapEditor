@@ -13,6 +13,7 @@ public:
 	Ogre::Vector3 Perturb(int x, int y, int z);
 
 	const float cellPerturbStrength = 8.0f;
+	const float waterElevationOffset = -5.0f;
 	Ogre::Image noiseSource;
 
 };

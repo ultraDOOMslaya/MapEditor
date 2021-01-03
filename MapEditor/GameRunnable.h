@@ -25,6 +25,7 @@ public:
 
 	void setup(void);
 	bool mouseReleased(const OgreBites::MouseButtonEvent& evt);
+	void frameRendered(const Ogre::FrameEvent& evt);
 
 	OgreBites::TrayManager* mTrayMgr;
 	OgreBites::TextBox* mCordPanel;			// Coordinates displayer
@@ -33,14 +34,18 @@ public:
 	OgreBites::CheckBox* mShowFlowPathCB;
 	OgreBites::CheckBox* mNonCombat;
 	OgreBites::CheckBox* mMoveableCamera;
+	OgreBites::CheckBox* mWaterCB;
+	OgreBites::CheckBox* mRampCB;
 
 	//Top left panel
 	OgreBites::SelectMenu* mEditColorSM;
 	OgreBites::SelectMenu* mGroundTypeSM;
+	OgreBites::SelectMenu* mRampDirectionSM;
 	OgreBites::Slider* mElevationSlider;
+	OgreBites::Slider* mPaletteSlider;
 
 	Ogre::MaterialPtr greenMat;
-	Ogre::ColourValue greenColor = Ogre::ColourValue::Green;
+	Ogre::ColourValue greenColor = Ogre::ColourValue::ColourValue(0.0f, 0.75f, 0.0f, 1.0f);
 	Ogre::MaterialPtr yellowMat;
 	Ogre::ColourValue yellowColor = Ogre::ColourValue::ColourValue(1.0f, 0.8f, 0.0f, 1.0f);
 	Ogre::MaterialPtr blueMat;
@@ -50,7 +55,7 @@ public:
 	
 	/* elevations */
 	Ogre::MaterialPtr darkerGreenMat;
-	Ogre::ColourValue darkerGreenColor = Ogre::ColourValue::ColourValue(0.0f, 0.92f, 0.0f, 1.0f);
+	Ogre::ColourValue darkerGreenColor = Ogre::ColourValue::ColourValue(0.0f, 0.52f, 0.0f, 1.0f);
 	Ogre::MaterialPtr darkerYellowMat;
 	Ogre::ColourValue darkerYellowColor = Ogre::ColourValue::ColourValue(0.92f, 0.72f, 0.0f, 1.0f);
 	Ogre::MaterialPtr darkerGrayMat;
@@ -66,6 +71,8 @@ public:
 	Ogre::SceneNode* camAnchor;
 
 	SquareGrid* mSquareGrid;
+
+	int mActiveWaterLevel = 0;
 };
 
 #endif __GameRunnable_h_

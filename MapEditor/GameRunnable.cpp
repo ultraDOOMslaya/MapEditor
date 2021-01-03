@@ -30,24 +30,40 @@ bool GameRunnable::mouseReleased(const OgreBites::MouseButtonEvent& evt)
 				SquareCell* cell = nullptr;
 				cell = mSquareGrid->getCell(parsedObjName);
 
+				if (cell == nullptr)
+					continue;
+
+				std::vector<SquareCell*> paletteCells = mSquareGrid->getNeighbors(cell->tileId, mPaletteSlider->getValue());
+				Ogre::MaterialPtr matToTouch = Ogre::MaterialPtr();
+				Ogre::ColourValue colorToTouch = Ogre::ColourValue();
+
 				if (mEditColorSM->getSelectedItem() == "Green") {
 					if (mElevationSlider->getValue() == 0) {
-						cell->touchCell(darkerGreenMat, darkerGreenColor, mElevationSlider->getValue());
+						matToTouch = darkerGreenMat;
+						colorToTouch = darkerGreenColor;
 					}
 					else {
-						cell->touchCell(greenMat, greenColor, mElevationSlider->getValue());
+						matToTouch = greenMat;
+						colorToTouch = greenColor;
 					}
 				}
 				else if (mEditColorSM->getSelectedItem() == "Yellow") {
 					if (mElevationSlider->getValue() == 0) {
-						cell->touchCell(darkerYellowMat, darkerYellowColor, mElevationSlider->getValue());
+						matToTouch = darkerYellowMat;
+						colorToTouch = darkerYellowColor;
 					}
 					else {
-						cell->touchCell(yellowMat, yellowColor, mElevationSlider->getValue());
+						matToTouch = yellowMat;
+						colorToTouch = yellowColor;
 					}
 				}
 				else if (mEditColorSM->getSelectedItem() == "Blue") {
-					cell->touchCell(blueMat, blueColor, mElevationSlider->getValue());
+					matToTouch = blueMat;
+					colorToTouch = blueColor;
+				}
+
+				for (auto cellToTouch = paletteCells.begin(); cellToTouch != paletteCells.end(); ++cellToTouch) {
+					(*cellToTouch)->touchCell(matToTouch, colorToTouch, mElevationSlider->getValue(), mWaterCB->isChecked(), mRampCB->isChecked(), mRampDirectionSM->getSelectedItem());
 				}
 			}
 		}
@@ -87,12 +103,16 @@ void GameRunnable::setup(void)
 	mShowFlowPathCB = mTrayMgr->createCheckBox(OgreBites::TL_TOPRIGHT, "ShowPath", "Show Paths", 150.0f);
 	mNonCombat = mTrayMgr->createCheckBox(OgreBites::TL_TOPRIGHT, "NonCombat", "Non Combat", 150.0f);*/
 	mMoveableCamera = mTrayMgr->createCheckBox(OgreBites::TL_TOPRIGHT, "MoveableCamera", "Moveable Camera", 150.0f);
+	mWaterCB = mTrayMgr->createCheckBox(OgreBites::TL_TOPRIGHT, "Water", "Water", 150.0f);
+	mRampCB = mTrayMgr->createCheckBox(OgreBites::TL_TOPRIGHT, "Ramp", "Ramp", 150.0f);
 
 
 	mEditColorSM = mTrayMgr->createThickSelectMenu(OgreBites::TL_TOPLEFT, "EditColor", "Colors:", 180.0f, 3, { "Green", "Yellow", "Blue" });
+	mRampDirectionSM = mTrayMgr->createThickSelectMenu(OgreBites::TL_TOPRIGHT, "RampDirection", "Direction:", 150.0f, 4, { "North", "South", "East", "West" });
 	/*mGroundTypeSM = mTrayMgr->createThickSelectMenu(OgreBites::TL_TOPLEFT, "GroundType", "Textures:", 180.0f, 2, { "Grass", "Dirt" });*/
-	mElevationSlider = mTrayMgr->createThickSlider(OgreBites::TL_TOPLEFT, "Elevation", "#:", 180.0f, 150.0f, -1, 5, 7);
+	mElevationSlider = mTrayMgr->createThickSlider(OgreBites::TL_TOPLEFT, "Elevation", "Elevation:", 180.0f, 100.0f, -1, 1, 3);
 	mElevationSlider->setValue(0);
+	mPaletteSlider = mTrayMgr->createThickSlider(OgreBites::TL_TOPLEFT, "Palette", "Squares:", 180.0f, 100.0f, 0, 3, 4);
 
 	addInputListener(mTrayMgr);
 
@@ -218,6 +238,38 @@ void GameRunnable::setup(void)
 }
 //----------------------------------------------------------------
 
+
+void GameRunnable::frameRendered(const Ogre::FrameEvent& evt)
+{
+	/* Camera movement */
+	// Working code but annoying when trying to debug
+	if (mMoveableCamera->isChecked()) {
+		Ogre::Vector3 transVector = Ogre::Vector3::ZERO;
+		int mMoveScale = 250;
+		int mHalfScale = 125;
+		int x, y;
+		SDL_GetMouseState(&x, &y);
+		if (x > (getRenderWindow()->getWidth() - 20)) {
+			transVector.x += mMoveScale;
+			transVector.z -= mMoveScale;
+		}
+		else if (x < 20) {
+			transVector.x -= mMoveScale;
+			transVector.z += mMoveScale;
+		}
+		else if (y > (getRenderWindow()->getHeight() - 20)) {
+			transVector.z += mMoveScale;
+			transVector.x += mMoveScale;
+			//transVector.y -= mMoveScale;
+		}
+		else if (y < 20) {
+			transVector.z -= mMoveScale;
+			transVector.x -= mMoveScale;
+			//transVector.y += mMoveScale;
+		}
+		mScnMgr->getSceneNode("camAnchor")->translate(transVector * evt.timeSinceLastFrame, Ogre::Node::TS_LOCAL);
+	}
+}
 
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 #define WIN32_LEAN_AND_MEAN
